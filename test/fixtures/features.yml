@@ -1,0 +1,10 @@
+feature_1:
+  id: 1
+  name: 'CD player'
+  user_id: 1
+feature_2:
+  id: 2
+  name: 'Moon roof'
+feature_3:
+  id: 3
+  name: 'Hybrid'

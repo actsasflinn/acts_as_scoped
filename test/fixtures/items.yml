@@ -1,0 +1,12 @@
+item_1:
+  id: 1
+  name: 'Plane'
+  user_id: 1
+item_2:
+  id: 2
+  name: 'Train'
+  user_id: 2
+item_3:
+  id: 3
+  name: 'Automobile'
+  user_id: 2

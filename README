@@ -1,0 +1,29 @@
+= acts_as_scoped
+
+This plugin wraps find, count, save and delete in a scope based on a persistent variable.  This enables you to use something like the userstamp plugin to ensure a model's find method returns objects scoped within the current user.
+
+== Resources
+
+=== Homepage
+
+* http://actsasflinn.com/articles/2007/07/19/acts-as-scoped
+
+=== Documentation
+
+* http://saas.rubyforge.org/acs_as_scoped
+
+=== Rubyforge Project
+
+* http://rubyforge.org/projects/saas
+
+=== Installation
+
+* script/plugin install svn://rubyforge.org/var/svn/saas/acts_as_scoped/trunk
+
+== License
+
+Released under the MIT license.
+
+== Authors
+
+* Flinn Mueller - http://actsasflinn.com
