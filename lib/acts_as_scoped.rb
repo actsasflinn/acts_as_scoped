@@ -1,7 +1,7 @@
 # Copyright (c) 2007 Flinn Mueller
 # Released under the MIT License.  See the MIT-LICENSE file for more details.
 
-module ActiveRecord
+module ActiveRecord #:nodoc:
   module Acts #:nodoc:
     module Scoped #:nodoc:
       # This plugin does is similar to {Scoped Access plugin}[http://agilewebdevelopment.com/plugins/scoped_access]
@@ -86,7 +86,7 @@ module ActiveRecord
           end
         end
 
-        def construct_finder_sql_with_current_scope(options)
+        def construct_finder_sql_with_current_scope(options) #:nodoc:
           if find_with_nil_scope && self.current_scope.nil?
             construct_finder_sql_without_current_scope(options)
           else
@@ -97,7 +97,7 @@ module ActiveRecord
         end
 
         # Scoped version of +calculate+
-        def calculate_with_current_scope(*args)
+        def calculate_with_current_scope(*args) #:nodoc:
           if find_with_nil_scope && self.current_scope.nil?
             calculate_without_current_scope(*args)
           else
@@ -108,7 +108,7 @@ module ActiveRecord
         end
 
         # Scoped version of +find+
-        def find_with_current_scope(*args)
+        def find_with_current_scope(*args) #:nodoc:
           if find_with_nil_scope && self.current_scope.nil?
             find_without_current_scope(*args)
           else
@@ -120,7 +120,7 @@ module ActiveRecord
 
         # Scoped version of +delete_all+
         # "EX-TER-MI-NATE!" ( In the voice of a Dalek[http://en.wikipedia.org/wiki/Dalek] )
-        def delete_all_with_current_scope(conditions = nil)
+        def delete_all_with_current_scope(conditions = nil) #:nodoc:
           delete_with_current_scope do
             delete_all_without_current_scope(conditions)
           end
@@ -129,7 +129,7 @@ module ActiveRecord
         protected
 
           # scoping for find
-          def with_current_scope(&proc)
+          def with_current_scope(&proc) #:nodoc:
             if self.current_scope
               # is IS NULL proper for all adapters?
               conditions = (find_global_nils ? [ "#{scope_id} = ? OR #{scope_id} IS NULL", self.current_scope_value ] : { scope_id => self.current_scope_value })
@@ -142,7 +142,7 @@ module ActiveRecord
           end
 
           # scoping for delete_all
-          def delete_with_current_scope(&proc)
+          def delete_with_current_scope(&proc) #:nodoc:
             if self.current_scope
               self.with_exclusive_scope(:find => { :conditions => { scope_id => self.current_scope_value } }) do
                 yield
@@ -153,11 +153,11 @@ module ActiveRecord
           end
       end
 
-      module InstanceMethods
+      module InstanceMethods #:nodoc:
         # Create doesn't respect scoping because scoping isn't made for this type of thing.
         # So instead of asking create to go against the Tao,
         # we'll enforce a protected attribute and set attribute on create
-        def create_with_current_scope
+        def create_with_current_scope #:nodoc:
           if self.class.current_scope
             send("#{self.scope_id}=", self.class.current_scope_value)
           end # else - validation ensure this bombs out

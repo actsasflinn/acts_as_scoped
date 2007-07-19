@@ -10,11 +10,33 @@ This plugin wraps find, count, save and delete in a scope based on a persistent 
 
 === Documentation
 
-* http://saas.rubyforge.org/acs_as_scoped
+* http://saas.rubyforge.org/acts_as_scoped
 
 === Rubyforge Project
 
 * http://rubyforge.org/projects/saas
+
+=== Usage
+
+You'll need to add a user_id column to the sandwiches table
+
+class Sandwich < ActiveRecord::Base
+  acts_as_scoped :user # belongs_to is included
+end
+
+class User < ActiveRecord::Base
+  cattr_accessor :current_user
+  has_many :sandwiches
+end
+
+class ApplicationController < ActionController::Base 
+...
+  before_filter :current_user
+
+  def current_user
+    User.current_user = User.find(session[:user_id]) unless session[:user_id].blank?
+  end
+...
 
 === Installation
 
