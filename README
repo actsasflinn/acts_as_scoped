@@ -25,7 +25,7 @@ class Sandwich < ActiveRecord::Base
 end
 
 class User < ActiveRecord::Base
-  cattr_accessor :current_user
+  cattr_accessor :current
   has_many :sandwiches
 end
 
@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
   before_filter :current_user
 
   def current_user
-    User.current_user = User.find(session[:user_id]) unless session[:user_id].blank?
+    User.current = User.find(session[:user_id]) unless session[:user_id].blank?
   end
 ...
 

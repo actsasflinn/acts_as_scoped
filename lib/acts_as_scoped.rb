@@ -21,7 +21,7 @@ module ActiveRecord #:nodoc:
         # * <tt>:id</tt>: scoped foreign key, defaults to association.foreign_key
         # * <tt>:class_name</tt>: class name of the current scope class, defaults to association.classify
         # * <tt>:class_id</tt>: identifier method for current scope class, defaults to primary_key
-        # * <tt>:current</tt>: method to call the current scope object, defaults to :current_user
+        # * <tt>:current</tt>: method to call the current scope object, defaults to :current
         # * <tt>:find_with_nil_scope</tt>: allow find when no current scope is set (good for authentication on a scoped object)
         # * <tt>:find_global_nils</tt>: allows you to mix scoped and global objects together
 
@@ -29,7 +29,7 @@ module ActiveRecord #:nodoc:
           scope_id = (options.delete(:id) || scope_association).to_s.foreign_key
           scope_class_name = (options.delete(:class_name) || scope_association).to_s.classify
           scope_class_id = options.delete(:class_id) || scope_class_name.constantize.primary_key
-          scope_current = options.delete(:current) || :current_user
+          scope_current = options.delete(:current) || :current
           find_with_nil_scope = options.delete(:find_with_nil_scope) || false
           find_global_nils = options.delete(:find_global_nils) || false
 
