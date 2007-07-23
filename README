@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
 
 === Installation
 
-* script/plugin install svn://rubyforge.org/var/svn/saas/acts_as_scoped/trunk
+* script/plugin install svn://rubyforge.org/var/svn/saas/acts_as_scoped/trunk/acts_as_scoped
 
 == License
 
