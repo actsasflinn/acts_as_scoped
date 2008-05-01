@@ -15,6 +15,8 @@ module ActiveRecord #:nodoc:
       end
     
       module ClassMethods
+        #VALID_FIND_OPTIONS << :without_current_scope
+
         # acts_as_scoped(scope_association = :user, options = {})
         #
         # Options are:
@@ -75,46 +77,42 @@ module ActiveRecord #:nodoc:
               end
             end
             alias_method_chain :destroy, :current_scope
-
           EOV
 
           class << self
             alias_method_chain :calculate, :current_scope
-            alias_method_chain :find, :current_scope
-            alias_method_chain :construct_finder_sql, :current_scope
+            alias_method_chain :find_every, :current_scope
             alias_method_chain :delete_all, :current_scope
+            alias_method_chain :validate_find_options, :current_scope
           end
         end
 
-        def construct_finder_sql_with_current_scope(options) #:nodoc:
-          if find_with_nil_scope && self.current_scope.nil?
-            construct_finder_sql_without_current_scope(options)
+        def validate_find_options_with_current_scope(options) #:nodoc:
+          options.delete(:without_current_scope)
+          validate_find_options_without_current_scope(options)
+        end
+
+        def without_current_scope?(*args)
+          options = args.extract_options!
+          without_current_scope = options.delete(:without_current_scope)
+          without_current_scope = (find_with_nil_scope && self.current_scope.nil?) if without_current_scope.blank?
+          without_current_scope ? args.push(options) : nil
+        end
+
+        def find_every_with_current_scope(*args) #:nodoc:
+          if options = without_current_scope?(*args)
+            find_every_without_current_scope(*options)
           else
-            with_current_scope do
-              construct_finder_sql_without_current_scope(options)
-            end
+            with_current_scope{ find_every_without_current_scope(*args) }
           end
         end
 
         # Scoped version of +calculate+
         def calculate_with_current_scope(*args) #:nodoc:
-          if find_with_nil_scope && self.current_scope.nil?
+          if options = without_current_scope?(*args)
             calculate_without_current_scope(*args)
           else
-            with_current_scope do
-              calculate_without_current_scope(*args)
-            end
-          end
-        end
-
-        # Scoped version of +find+
-        def find_with_current_scope(*args) #:nodoc:
-          if find_with_nil_scope && self.current_scope.nil?
-            find_without_current_scope(*args)
-          else
-            with_current_scope do
-              find_without_current_scope(*args)
-            end
+            with_current_scope{ calculate_without_current_scope(*args) }
           end
         end
 
@@ -133,7 +131,7 @@ module ActiveRecord #:nodoc:
             if self.current_scope
               # is IS NULL proper for all adapters?
               conditions = (find_global_nils ? [ "#{scope_id} = ? OR #{scope_id} IS NULL", self.current_scope_value ] : { scope_id => self.current_scope_value })
-              self.with_exclusive_scope(:find => { :conditions => conditions }) do
+              self.with_scope(:find => { :conditions => conditions }) do
                 yield
               end
             else
@@ -142,9 +140,9 @@ module ActiveRecord #:nodoc:
           end
 
           # scoping for delete_all
-          def delete_with_current_scope(&proc) #:nodoc:
+          def delete_with_current_scope(&block) #:nodoc:
             if self.current_scope
-              self.with_exclusive_scope(:find => { :conditions => { scope_id => self.current_scope_value } }) do
+              self.with_scope(:find => { :conditions => { scope_id => self.current_scope_value } }) do
                 yield
               end
             else
