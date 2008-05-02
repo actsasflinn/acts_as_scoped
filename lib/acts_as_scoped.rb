@@ -88,8 +88,11 @@ module ActiveRecord #:nodoc:
         end
 
         def validate_find_options_with_current_scope(options) #:nodoc:
-          options.delete(:without_current_scope)
-          validate_find_options_without_current_scope(options)
+          # Can't seem to address VALID_FIND_OPTIONS
+          valid_find_options = [ :conditions, :include, :joins, :limit, :offset,
+                                 :order, :select, :readonly, :group, :from, :lock,
+                                 :without_current_scope ]
+          options.assert_valid_keys(valid_find_options)
         end
 
         def without_current_scope?(*args)
