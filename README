@@ -1,3 +1,7 @@
+= TODO
+
+Update this plugin to use named_scope and add an easy way to un-scope stuff.  As it stands it's a major design defiency with this plugin.
+
 = acts_as_scoped
 
 This plugin wraps find, count, save and delete in a scope based on a persistent variable.  This enables you to use something like the userstamp plugin to ensure a model's find method returns objects scoped within the current user.
